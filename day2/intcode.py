@@ -8,7 +8,7 @@ class IntCode:
     """
 
     def __init__(self, opcode):
-        self.opcode = opcode
+        self.opcode = opcode.copy()
         self.length = len(opcode)
         self.position = 0
         self._run()
@@ -56,15 +56,16 @@ class IntCode:
         while self.position < self.length:
             if self.opcode[self.position] == 1:
                 self._opcode_1()
+                self.position += 4
             elif self.opcode[self.position] == 2:
                 self._opcode_2()
+                self.position += 4
             elif self.opcode[self.position] == 99:
-                print("Intcode program completed successfully.")
+                # print("Intcode program completed successfully.")
                 return
             else:
-                print("Error: invalid opcode at position {self.position}: {self.opcode[self.position]}")
-
-            self.position += 4
+                print(f"Error: invalid opcode at position {self.position}: {self.opcode[self.position]}")
+                return
 
         print("Error: No more opcode values to read!")
 
@@ -93,12 +94,14 @@ def print_opcode(opcode):
     return full_opcode[:-1]
 
 
-def patch_opcode(opcode, position, value):
+def patch_me(opcode, value1, value2):
     """
-    Perform a manual patch of an opcode. Changes opcode[position] to the given value.
+    Perform standard patching of opcode using two values replaced in positions 1 and 2.
     """
-    opcode[position] = value
-    return opcode
+    new_opcode = opcode.copy()
+    new_opcode[1] = value1
+    new_opcode[2] = value2
+    return new_opcode
 
 
 def fly_like_an_eagle():
@@ -110,9 +113,7 @@ def fly_like_an_eagle():
     print("Here is the original opcode:")
     print(print_opcode(opcode) + "\n")
 
-    patched_opcode = patch_opcode(opcode,         1, 12)
-    patched_opcode = patch_opcode(patched_opcode, 2, 2)
-
+    patched_opcode = patch_me(opcode, 12, 2)
     print("Here is the patched opcode:")
     print(print_opcode(patched_opcode) + "\n")
 
@@ -124,5 +125,33 @@ def fly_like_an_eagle():
     print(f"The value at position 0 is {run.opcode[0]}")
 
 
+def get_test_value(opcode):
+    """
+    Run a test with the opcode provided.
+    """
+    run = IntCode(opcode)
+    return run.opcode[0]
+
+
+def we_got_dodgson_here():
+    """
+    See, nobody cares...nice hat.
+    """
+    opcode = read_opcode(OPCODE_FILE)
+    target_output = 19690720
+
+    print(f"\nFinding target value {target_output}...")
+
+    for val1 in range(1,100):
+        for val2 in range(1,100):
+            patch = patch_me(opcode, val1, val2)
+            result = get_test_value(patch)
+            if result == target_output:
+                print(f"Matched {target_output} with values {val1} and {val2}!")
+                answer = 100 * val1 + val2
+                print(f"The answer to the question is {answer}!")
+                return
+
 if __name__ == "__main__":
     fly_like_an_eagle()
+    we_got_dodgson_here()
