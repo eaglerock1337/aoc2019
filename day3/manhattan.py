@@ -60,11 +60,11 @@ def get_intersections(plot1, plot2):
     return results
 
 
-def dont_stop_believin():
+def dont_stop_believin(plotfile):
     """
     He took a midnight train goin' AAAAAAAAAAAAAANNYWHEEEEEEEEEEEEEEEEEEERE
     """
-    hansel, gretel = import_plots(PLOT_FILE)
+    hansel, gretel = import_plots(plotfile)
     hansel_crumbs = plot_wire(hansel)  # What kind of a name is Hansel, anyway?
     gretel_crumbs = plot_wire(gretel)
     matches = get_intersections(hansel_crumbs, gretel_crumbs)
@@ -85,9 +85,11 @@ def dont_stop_believin():
     )
     print(f"Part 2 answer: The travelled Manhattan distance was {part2_answer[3]}!")
 
+    return part1_answer, part2_answer
+
 
 if __name__ == "__main__":
-    dont_stop_believin()
+    dont_stop_believin(PLOT_FILE)
 
 
 # Tests
@@ -141,3 +143,10 @@ def test_get_intersections():
     plot2 = [(0, 1), (1, 1), (2, 1), (2, 0), (2, -1), (3, -1), (4, -1), (5, -1)]
     result = [(2, 0, 2, 6), (4, -1, 5, 12)]
     assert get_intersections(plot1, plot2) == result
+
+
+def test_dont_stop_believin():
+    PLOT_FILE = "test.txt"
+    part1_answer, part2_answer = dont_stop_believin(PLOT_FILE)
+    assert part1_answer[2] == 2
+    assert part2_answer[3] == 6
