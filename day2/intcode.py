@@ -64,12 +64,14 @@ class IntCode:
                 # print("Intcode program completed successfully.")
                 return
             else:
-                print(f"Error: invalid opcode at position {self.position}: {self.opcode[self.position]}")
+                print(
+                    f"Error: invalid opcode at position {self.position}: {self.opcode[self.position]}"
+                )
                 return
 
         print("Error: No more opcode values to read!")
 
-    
+
 def read_opcode(filename):
     """
     Read in the opcode from a given filename and return as a list.
@@ -142,8 +144,8 @@ def we_got_dodgson_here():
 
     print(f"\nFinding target value {target_output}...")
 
-    for val1 in range(1,100):
-        for val2 in range(1,100):
+    for val1 in range(1, 100):
+        for val2 in range(1, 100):
             patch = patch_me(opcode, val1, val2)
             result = get_test_value(patch)
             if result == target_output:
@@ -151,6 +153,7 @@ def we_got_dodgson_here():
                 answer = 100 * val1 + val2
                 print(f"The answer to the question is {answer}!")
                 return
+
 
 if __name__ == "__main__":
     fly_like_an_eagle()

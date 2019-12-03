@@ -23,10 +23,10 @@ def convert_plot(plot):
     """
     Convert plot from a string to a list of instructions
     """
-    plots = plot.split(',')
+    plots = plot.split(",")
     instructions = []
     for i in plots:
-        instructions.append( (str(i[0]), int(i[1:])) )
+        instructions.append((str(i[0]), int(i[1:])))
     return instructions
 
 
@@ -36,12 +36,7 @@ def plot_wire(plot):
     """
     coords = []
     position = [0, 0]
-    directions = {
-        "R": [1, 0],
-        "L": [-1, 0],
-        "U": [0, 1],
-        "D": [0, -1]
-    }
+    directions = {"R": [1, 0], "L": [-1, 0], "U": [0, 1], "D": [0, -1]}
     instructions = convert_plot(plot)
 
     for direction, distance in instructions:
@@ -61,7 +56,7 @@ def get_intersections(plot1, plot2):
     for (x, y) in intersections:
         distance = abs(x) + abs(y)
         travel = plot1.index((x, y)) + plot2.index((x, y)) + 2
-        results.append( (x, y, distance, travel) )
+        results.append((x, y, distance, travel))
     return results
 
 
@@ -70,7 +65,7 @@ def dont_stop_believin():
     He took a midnight train goin' AAAAAAAAAAAAAANNYWHEEEEEEEEEEEEEEEEEEERE
     """
     hansel, gretel = import_plots(PLOT_FILE)
-    hansel_crumbs = plot_wire(hansel)   # What kind of a name is Hansel, anyway?
+    hansel_crumbs = plot_wire(hansel)  # What kind of a name is Hansel, anyway?
     gretel_crumbs = plot_wire(gretel)
     matches = get_intersections(hansel_crumbs, gretel_crumbs)
 
@@ -81,9 +76,13 @@ def dont_stop_believin():
 
     print("Here's the results:")
     print(f"There were a total of {len(matches)} intersections.")
-    print(f"The closest intersection was at the coordinates {part1_answer[0]}, {part1_answer[1]}.")
+    print(
+        f"The closest intersection was at the coordinates {part1_answer[0]}, {part1_answer[1]}."
+    )
     print(f"Part 1 answer: The absolute Manhattan distance was {part1_answer[2]}!")
-    print(f"The least traveled intersection was at the coordinates {part2_answer[0]}, {part2_answer[1]}.")
+    print(
+        f"The least traveled intersection was at the coordinates {part2_answer[0]}, {part2_answer[1]}."
+    )
     print(f"Part 2 answer: The travelled Manhattan distance was {part2_answer[3]}!")
 
 
@@ -91,9 +90,8 @@ if __name__ == "__main__":
     dont_stop_believin()
 
 
-"""""
-Tests
-"""""
+# Tests
+
 
 def test_import_plots():
     plotfile = "test.txt"
@@ -113,16 +111,33 @@ def test_convert_plot():
 def test_plot_wire():
     plot = "R4,D3,L2,U1"
     result = [
-        (1,  0), (2,  0), (3,  0), (4,  0),
-        (4, -1), (4, -2), (4, -3),
-        (3, -3), (2, -3),
-        (2, -2)
+        (1, 0),
+        (2, 0),
+        (3, 0),
+        (4, 0),
+        (4, -1),
+        (4, -2),
+        (4, -3),
+        (3, -3),
+        (2, -3),
+        (2, -2),
     ]
     assert plot_wire(plot) == result
 
 
 def test_get_intersections():
-    plot1 = [ (1, 0), (2, 0), (3, 0), (4, 0), (4, -1), (4, -2), (4, -3), (3, -3), (2, -3), (2, -2) ]
-    plot2 = [ (0, 1), (1, 1), (2, 1), (2, 0), (2, -1), (3, -1), (4, -1), (5, -1) ]
-    result = [ (2, 0, 2, 6), (4, -1, 5, 12) ]
+    plot1 = [
+        (1, 0),
+        (2, 0),
+        (3, 0),
+        (4, 0),
+        (4, -1),
+        (4, -2),
+        (4, -3),
+        (3, -3),
+        (2, -3),
+        (2, -2),
+    ]
+    plot2 = [(0, 1), (1, 1), (2, 1), (2, 0), (2, -1), (3, -1), (4, -1), (5, -1)]
+    result = [(2, 0, 2, 6), (4, -1, 5, 12)]
     assert get_intersections(plot1, plot2) == result

@@ -32,6 +32,7 @@ def fuel_recurse_calc(value):
     else:
         return 0
 
+
 def do_the_mario():
     """
     SWING YOUR ARMS FROM SIDE TO SIDE
@@ -48,6 +49,7 @@ def do_the_mario():
     print(f"Fuel needed: {fuel_sum}\n")
     print("========== Part Two Answer ==========")
     print(f"Fuel needed: {fuel_recurse_sum}")
+
 
 if __name__ == "__main__":
     do_the_mario()
