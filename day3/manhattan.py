@@ -54,7 +54,7 @@ def plot_wire(plot):
 
 def get_intersections(plot1, plot2):
     """
-    Get intersections between two plots and calculate manhattan distance of the intersection
+    Get intersections between two plots and calculate Manhattan distance of the intersection
     """
     intersections = set(plot1).intersection(plot2)
     results = []
