@@ -45,7 +45,7 @@ def plot_wire(plot):
     instructions = convert_plot(plot)
 
     for direction, distance in instructions:
-        for i in range(distance):
+        for _ in range(distance):
             position = [a + b for a, b in zip(position, directions.get(direction))]
             coords.append(tuple(position))
 
