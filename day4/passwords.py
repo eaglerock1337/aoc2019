@@ -95,10 +95,13 @@ class DatPassword:
             )
         else:
             print("Error: invalid input string!")
+            self.start = None
+            self.end = None
 
     def run_test(self):
         if self.start is None or self.end is None:
             print("Error: cannot run test...no start/end provided!")
+            return
 
         for a in range(self.start.a, self.end.a + 1):
             for b in range(a, 10):

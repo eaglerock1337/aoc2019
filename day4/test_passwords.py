@@ -100,6 +100,19 @@ def test_password_invalid_no_duplicate():
     assert not object.is_part2_valid()
 
 
+def test_password_part2_true_matches():
+    test1 = Password(1, 1, 2, 3, 4, 5)
+    test2 = Password(1, 2, 2, 3, 4, 5)
+    test3 = Password(1, 2, 3, 3, 4, 5)
+    test4 = Password(1, 2, 3, 4, 4, 5)
+    test5 = Password(1, 2, 3, 4, 5, 5)
+    assert test1.is_part2_valid()
+    assert test2.is_part2_valid()
+    assert test3.is_part2_valid()
+    assert test4.is_part2_valid()
+    assert test5.is_part2_valid()
+
+
 def test_password_get():
     a = 1
     b = 2
@@ -120,6 +133,14 @@ def test_dat_password_create():
     assert object.end.number == 234567
     assert object.part1_results == []
     assert object.part2_results == []
+
+
+def test_dat_password_invalid_input():
+    input = "123456"
+    object = DatPassword(input)
+    object.run_test()
+    assert object.start is None
+    assert object.end is None
 
 
 def test_dat_password_run():
