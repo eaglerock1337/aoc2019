@@ -12,6 +12,7 @@ def test_password_create():
     f = 6
     result = 123456
     object = Password(a, b, c, d, e, f)
+    assert isinstance(object, Password)
     assert object.a == a
     assert object.b == b
     assert object.c == c
@@ -21,7 +22,7 @@ def test_password_create():
     assert object.number == result
 
 
-def test_password_valid_1():
+def test_password_valid():
     a = 1
     b = 2
     c = 4
@@ -29,18 +30,20 @@ def test_password_valid_1():
     e = 6
     f = 7
     object = Password(a, b, c, d, e, f)
-    assert object.is_valid()
+    assert object.is_part1_valid()
+    assert object.is_part2_valid()
 
 
-def test_password_valid_2():
-    a = 2
+def test_password_only_part1_valid():
+    a = 1
     b = 2
     c = 4
     d = 4
     e = 4
     f = 7
     object = Password(a, b, c, d, e, f)
-    assert object.is_valid()
+    assert object.is_part1_valid()
+    assert not object.is_part2_valid()
 
 
 def test_password_invalid_bad_number():
@@ -51,7 +54,8 @@ def test_password_invalid_bad_number():
     e = 8
     f = 12
     object = Password(a, b, c, d, e, f)
-    assert not object.is_valid()
+    assert not object.is_part1_valid()
+    assert not object.is_part2_valid()
 
 
 def test_password_invalid_bad_order():
@@ -62,7 +66,8 @@ def test_password_invalid_bad_order():
     e = 8
     f = 4
     object = Password(a, b, c, d, e, f)
-    assert not object.is_valid()
+    assert not object.is_part1_valid()
+    assert not object.is_part2_valid()
 
 
 def test_password_invalid_final_zero():
@@ -73,7 +78,8 @@ def test_password_invalid_final_zero():
     e = 8
     f = 0
     object = Password(a, b, c, d, e, f)
-    assert not object.is_valid()
+    assert not object.is_part1_valid()
+    assert not object.is_part2_valid()
 
 
 def test_password_invalid_no_duplicate():
@@ -84,7 +90,8 @@ def test_password_invalid_no_duplicate():
     e = 8
     f = 9
     object = Password(a, b, c, d, e, f)
-    assert not object.is_valid()
+    assert not object.is_part1_valid()
+    assert not object.is_part2_valid()
 
 
 def test_password_get():
@@ -97,3 +104,29 @@ def test_password_get():
     result = 122344
     object = Password(a, b, c, d, e, f)
     assert object.get() == result
+
+
+def test_dat_password_create():
+    input = "123456-234567"
+    object = DatPassword(input)
+    assert isinstance(object, DatPassword)
+    assert object.start.number == 123456
+    assert object.end.number == 234567
+    assert object.part1_results == []
+    assert object.part2_results == []
+
+
+def test_dat_password_run():
+    input = "123498-123556"
+    object = DatPassword(input)
+    object.run_test()
+    assert object.part1_results == [123499, 123555, 123556]
+    assert object.part2_results == [123499, 123556]
+
+
+def test_dat_password_gets():
+    input = "123498-123556"
+    object = DatPassword(input)
+    object.run_test()
+    assert object.get_part1_number() == 3
+    assert object.get_part2_number() == 2
