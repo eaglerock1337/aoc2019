@@ -1,3 +1,6 @@
+import os
+
+
 OPCODE_FILE = "opcode.txt"
 
 
@@ -77,6 +80,9 @@ def read_opcode(filename):
     Read in the opcode from a given filename and return as a list.
     Currently only reads in a single opcode from the file.
     """
+    if os.path.basename(os.getcwd()) == "aoc2019":
+        filename = os.path.join("day2", filename)
+
     with open(filename, "r") as opcode_file:
         opcode = opcode_file.readline()
 

@@ -1,3 +1,5 @@
+import os
+
 from operator import itemgetter
 
 """
@@ -15,7 +17,10 @@ def import_plots(filename):
     """
     Input lines of plots as strings
     """
-    with open(filename, "r") as plotfile:
+    if os.path.basename(os.getcwd()) == "aoc2019":
+        filename = os.path.join("day3", filename)
+
+    with open(os.path.abspath(filename), "r") as plotfile:
         return plotfile.read().splitlines()
 
 

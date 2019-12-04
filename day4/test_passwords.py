@@ -1,9 +1,15 @@
-from day4.passwords import Password
-from day4.passwords import DatPassword
+from day4.passwords import Password, DatPassword, hack_the_planet
+
 
 # Tests
 
+
 def test_password_create():
+    object = Password(1, 2, 3, 4, 5, 6)
+    assert isinstance(object, Password)
+
+
+def test_password_variables():
     a = 1
     b = 2
     c = 3
@@ -130,3 +136,12 @@ def test_dat_password_gets():
     object.run_test()
     assert object.get_part1_number() == 3
     assert object.get_part2_number() == 2
+
+
+def test_hack_the_planet():
+    INPUT = "123498-123556"
+    part1 = 3
+    part2 = 2
+    result1, result2 = hack_the_planet(INPUT)
+    assert part1 == result1
+    assert part2 == result2

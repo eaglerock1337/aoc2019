@@ -1,3 +1,5 @@
+import os
+
 from math import floor
 
 
@@ -8,6 +10,9 @@ def import_values(filename):
     """
     Import values from given filename and return a list of values.
     """
+    if os.path.basename(os.getcwd()) == "aoc2019":
+        filename = os.path.join("day1", filename)
+
     with open(filename, "r") as valuefile:
         return valuefile.readlines()
 

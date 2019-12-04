@@ -14,7 +14,14 @@ class Password:
         self.d = int(d)  #     100s digit
         self.e = int(e)  #      10s digit
         self.f = int(f)  #       1s digit
-        self.number = self.a * 100000 + self.b * 10000 + self.c * 1000 + self.d * 100 + self.e * 10 + self.f
+        self.number = (
+            self.a * 100000
+            + self.b * 10000
+            + self.c * 1000
+            + self.d * 100
+            + self.e * 10
+            + self.f
+        )
 
     def is_part1_valid(self):
         """
@@ -22,7 +29,13 @@ class Password:
         Valid numbers can only have incrementing numbers (0 not included) and must include at least 2 duplicate numbers.
         """
         if 0 <= self.a <= self.b <= self.c <= self.d <= self.e <= self.f <= 9:
-            if self.a == self.b or self.b == self.c or self.c == self.d or self.d == self.e or self.e == self.f:
+            if (
+                self.a == self.b
+                or self.b == self.c
+                or self.c == self.d
+                or self.d == self.e
+                or self.e == self.f
+            ):
                 return True
             else:
                 return False
@@ -38,7 +51,7 @@ class Password:
         if self.is_part1_valid():
             if self.a == self.b and self.b != self.c:
                 return True
-            
+
             if self.b == self.c and self.a != self.b and self.c != self.d:
                 return True
 
@@ -53,7 +66,7 @@ class Password:
 
             return False
         else:
-            return False 
+            return False
 
     def get(self):
         return self.number
@@ -74,8 +87,12 @@ class DatPassword:
 
     def _parse_input(self, input):
         if len(input) == 13:
-            self.start = Password(input[0], input[1], input[2], input[3], input[4], input[5])
-            self.end = Password(input[7], input[8], input[9], input[10], input[11], input[12])
+            self.start = Password(
+                input[0], input[1], input[2], input[3], input[4], input[5]
+            )
+            self.end = Password(
+                input[7], input[8], input[9], input[10], input[11], input[12]
+            )
         else:
             print("Error: invalid input string!")
 
@@ -90,7 +107,11 @@ class DatPassword:
                         for e in range(d, 10):
                             for f in range(e, 10):
                                 test = Password(a, b, c, d, e, f)
-                                if test.is_part1_valid() and test.get() >= self.start.get() and test.get() <= self.end.get():
+                                if (
+                                    test.is_part1_valid()
+                                    and test.get() >= self.start.get()
+                                    and test.get() <= self.end.get()
+                                ):
                                     self.part1_results.append(test.get())
                                     if test.is_part2_valid():
                                         self.part2_results.append(test.get())
@@ -102,17 +123,19 @@ class DatPassword:
         return len(self.part2_results)
 
 
-def hack_the_planet():
+def hack_the_planet(input):
     """
     HACK THE PLANET!!! HAAAACK THE PLAAAANEEET!!!!
     YEAAAH! HACK THE PLANET! HACK THE PLANET!
     """
-    zero_cool = DatPassword(INPUT)
+    zero_cool = DatPassword(input)
     print(f"Running test from {zero_cool.start.get()} to {zero_cool.end.get()}")
     zero_cool.run_test()
     print(f"A total of {zero_cool.get_part1_number()} part 1 passwords were found!")
     print(f"A total of {zero_cool.get_part2_number()} part 2 passwords were found!")
 
+    return zero_cool.get_part1_number(), zero_cool.get_part2_number()
+
 
 if __name__ == "__main__":
-    hack_the_planet()
+    hack_the_planet(INPUT)
