@@ -38,11 +38,11 @@ def fuel_recurse_calc(value):
         return 0
 
 
-def do_the_mario():
+def do_the_mario(valuefile):
     """
     SWING YOUR ARMS FROM SIDE TO SIDE
     """
-    values = import_values(VALUEFILE)
+    values = import_values(valuefile)
     fuel_sum = 0
     fuel_recurse_sum = 0
 
@@ -55,6 +55,8 @@ def do_the_mario():
     print("========== Part Two Answer ==========")
     print(f"Fuel needed: {fuel_recurse_sum}")
 
+    return fuel_sum, fuel_recurse_sum
+
 
 if __name__ == "__main__":
-    do_the_mario()
+    do_the_mario(VALUEFILE)
