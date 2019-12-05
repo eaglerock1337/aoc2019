@@ -5,19 +5,31 @@ OPCODE_FUNC = {
     '01': '_opcode_1',
     '02': '_opcode_2',
     '03': '_opcode_3',
-    '04': '_opcode_4'
+    '04': '_opcode_4',
+    '05': '_opcode_5',
+    '06': '_opcode_6',
+    '07': '_opcode_7',
+    '08': '_opcode_8'
 }
 OPCODE_PARAMS = {
     '01': 4,
     '02': 4,
     '03': 2,
-    '04': 2
+    '04': 2,
+    '05': 3,
+    '06': 3,
+    '07': 4,
+    '08': 4
 }
 LAST_VAL_FORCED_REF = {
     '01': True,
     '02': True,
     '03': True,
-    '04': False
+    '04': False,
+    '05': False,
+    '06': False,
+    '07': True,
+    '08': True,
 }
 
 class IntCode:
@@ -41,22 +53,24 @@ class IntCode:
     def _opcode_1(self, params):
         """
         Opcode 1: Add two numbers
-        params[0] - first number to add
-        params[1] - second number to add
+        params[0] - location of first number to add
+        params[1] - location of second number to add
         params[2] - location to store sum
         """
         num1, num2, result = params
         self.opcode[result] = self.opcode[num1] + self.opcode[num2]
+        return True
 
     def _opcode_2(self, params):
         """
         Opcode 2: Multiply two numbers
-        params[0] - first number to multiply
-        params[1] - second number to multiply
+        params[0] - location of first number to multiply
+        params[1] - location of second number to multiply
         params[2] - location to store product
         """
         num1, num2, result = params
         self.opcode[result] = self.opcode[num1] * self.opcode[num2]
+        return True
 
     def _opcode_3(self, params):
         """
@@ -65,6 +79,7 @@ class IntCode:
         """
         value = int(input("Please enter a value: "))
         self.opcode[params.pop()] = value
+        return True
 
     def _opcode_4(self, params):
         """
@@ -72,6 +87,61 @@ class IntCode:
         params[0] - location of value to output
         """
         print(f"OUTPUT: {self.opcode[params.pop()]}")
+        return True
+
+    def _opcode_5(self, params):
+        """
+        Opcode 5: Jump if true - Sets instruction pointer if value is true
+        params[0] - location of boolean paramter (zero is false, nonzero is true)
+        params[1] - location of instruction pointer to change to if true
+        """
+        boolean, pointer = params
+        if self.opcode[boolean] == 0:
+            return True
+        else:
+            self.position = self.opcode[pointer]
+            return False
+
+    def _opcode_6(self, params):
+        """
+        Opcode 6: Jump if false - Sets instruction pointer if value is false
+        params[0] - location of boolean paramter (zero is false, nonzero is true)
+        params[1] - location of instruction pointer to change to if false
+        """
+        boolean, pointer = params
+        if self.opcode[boolean] == 0:
+            self.position = self.opcode[pointer]
+            return False
+        else:
+            return True
+
+    def _opcode_7(self, params):
+        """
+        Opcode 7: Less than - Stores 1 if first value is less than the second, 0 otherwise
+        params[0] - location of first value to be compared
+        params[1] - location of second value to be compared
+        params[2] - location to store 1 if first value is less than second, 0 otherwise
+        """
+        val1, val2, boolean = params
+        if self.opcode[val1] < self.opcode[val2]:
+            self.opcode[boolean] = 1
+        else:
+            self.opcode[boolean] = 0
+        return True
+
+    def _opcode_8(self, params):
+        """
+        Opcode 8: Equals - Stores 1 if first value is equal to the second, 0 otherwise
+        params[0] - location of first value to be compared
+        params[1] - location of second value to be compared
+        params[2] - location to store 1 if first value is equal to the second, 0 otherwise
+        """
+        val1, val2, boolean = params
+        if self.opcode[val1] == self.opcode[val2]:
+            self.opcode[boolean] = 1
+        else:
+            self.opcode[boolean] = 0
+        return True
 
     def run(self):
         """
@@ -122,8 +192,9 @@ class IntCode:
                     return
 
                 function=getattr(self, OPCODE_FUNC[opcode])
-                function(params)
-                self.position += OPCODE_PARAMS[opcode]
+                advance = function(params)
+                if advance:
+                    self.position += OPCODE_PARAMS[opcode]
             else:
                 print(
                     f"Error: invalid opcode {opcode} at position {self.position}: {self.opcode[self.position]}"
