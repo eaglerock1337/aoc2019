@@ -125,9 +125,17 @@ def test_run_out_of_opcode_values():
     assert object.opcode == result
 
 
+def test_invalid_last_opcode_mode():
+    opcode = [11101, 5, 5, 99]
+    result = [11101, 5, 5, 99]
+    object = IntCode(opcode)
+    object.run()
+    assert object.opcode == result
+
+
 def test_too_many_opcode_values():
-    opcode = [11101, 5, 5, 99, 0]
-    result = [11101, 5, 5, 99, 0]
+    opcode = [101101, 5, 5, 4, 99, 0]
+    result = [101101, 5, 5, 4, 99, 0]
     object = IntCode(opcode)
     object.run()
     assert object.opcode == result

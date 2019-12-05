@@ -8,10 +8,16 @@ OPCODE_FUNC = {
     '04': '_opcode_4'
 }
 OPCODE_PARAMS = {
-    '01': 3,
-    '02': 3,
-    '03': 1,
-    '04': 1
+    '01': 4,
+    '02': 4,
+    '03': 2,
+    '04': 2
+}
+LAST_VAL_FORCED_REF = {
+    '01': True,
+    '02': True,
+    '03': True,
+    '04': False
 }
 
 class IntCode:
@@ -40,7 +46,7 @@ class IntCode:
         params[2] - location to store sum
         """
         num1, num2, result = params
-        self.opcode[result] = num1 + num2
+        self.opcode[result] = self.opcode[num1] + self.opcode[num2]
 
     def _opcode_2(self, params):
         """
@@ -50,7 +56,7 @@ class IntCode:
         params[2] - location to store product
         """
         num1, num2, result = params
-        self.opcode[result] = num1 * num2
+        self.opcode[result] = self.opcode[num1] * self.opcode[num2]
 
     def _opcode_3(self, params):
         """
@@ -86,6 +92,10 @@ class IntCode:
             if opcode in OPCODE_FUNC:
                 params = []
 
+                if self.position + OPCODE_PARAMS[opcode] > self.length:
+                    print(f"Invalid Opcode reference at {self.position}: Opcode string has run out of values!")
+                    return
+
                 for i in range(1, OPCODE_PARAMS[opcode]):
                     try:
                         mode = instruction.pop() 
@@ -95,36 +105,25 @@ class IntCode:
                     if mode == '0':
                         param_pos = self.opcode[self.position + i]
                         if param_pos < self.length:
-                            params.append(self.opcode[param_pos])
+                            params.append(param_pos)
                         else:
                             print(f"Invalid Opcode reference at {self.position}: {param_pos} is out of range!")
                             return
 
                     elif mode == '1':
-                        if self.position + i < self.length:
-                            params.append(self.opcode[self.position + i])
-                        else:
-                            print(f"Ran out of opcode values at {self.position}: {self.position + i} is out of range!")
+                        if i == OPCODE_PARAMS[opcode] - 1 and LAST_VAL_FORCED_REF[opcode]:
+                            print(f"Invalid Opcode reference at {self.position}: Opcode {opcode} requires a location for its last value!")
                             return
+
+                        params.append(self.position + i)
                 
                 if len(instruction) > 0:
                     print(f"Invalid Opcode at {self.position}: {self.opcode[self.position]} has too many characters!")
                     return
 
-                if self.position + OPCODE_PARAMS[opcode] < self.length:
-                    last_param_pos = self.opcode[self.position + OPCODE_PARAMS[opcode]]
-                    if last_param_pos < self.length:
-                        params.append(last_param_pos)
-                    else:
-                        print(f"Invalid Opcode reference at {self.position}: storage location {last_param_pos} is out of range!")
-                        return
-                else:
-                    print(f"Invalid Opcode at {self.position}: ran out of values!")
-                    return
-
                 function=getattr(self, OPCODE_FUNC[opcode])
                 function(params)
-                self.position += OPCODE_PARAMS[opcode] + 1
+                self.position += OPCODE_PARAMS[opcode]
             else:
                 print(
                     f"Error: invalid opcode {opcode} at position {self.position}: {self.opcode[self.position]}"
