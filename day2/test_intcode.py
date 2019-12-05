@@ -8,6 +8,8 @@ from day2.intcode import (
 )
 
 # Tests
+
+
 def test_intcode_create():
     opcode = [1, 9, 10, 3, 99]
     object = IntCode(opcode)

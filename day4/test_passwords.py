@@ -1,6 +1,5 @@
 from day4.passwords import Password, DatPassword, hack_the_planet
 
-
 # Tests
 
 

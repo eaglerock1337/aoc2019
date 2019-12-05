@@ -3,6 +3,8 @@ import mock
 from day5.intcode import IntCode, read_opcode, find_pebkac_error
 
 # Tests
+
+
 def test_intcode_create():
     opcode = [1, 9, 10, 3, 99]
     object = IntCode(opcode)
