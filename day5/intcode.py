@@ -237,6 +237,9 @@ def read_opcode(filename):
 
 
 def find_pebkac_error(filename):
+    """
+    Problem exists between keyboard and chair.
+    """
     opcode = read_opcode(filename)
 
     print(f"Running TEST program...")
