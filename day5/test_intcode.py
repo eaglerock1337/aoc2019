@@ -1,17 +1,13 @@
 import mock
 
-from day5.intcode import (
-    IntCode,
-    read_opcode,
-    find_pebkac_error
-)
+from day5.intcode import IntCode, read_opcode, find_pebkac_error
 
 # Tests
 def test_intcode_create():
     opcode = [1, 9, 10, 3, 99]
     object = IntCode(opcode)
     assert isinstance(object, IntCode)
-    
+
 
 def test_intcode_values():
     opcode = [1, 9, 10, 3, 99]
@@ -72,16 +68,16 @@ def test_opcode_2():
     object = IntCode(opcode)
     object.run()
     assert object.opcode == result_opcode
-    
+
 
 def test_opcode_3():
     opcode = [3, 3, 99, 0]
     result = [3, 3, 99, 42]
-    with mock.patch('builtins.input', return_value=42):
+    with mock.patch("builtins.input", return_value=42):
         object = IntCode(opcode)
         object.run()
         assert object.opcode == result
-        
+
 
 def test_opcode_4(capsys):
     opcode = [4, 3, 99, 42]
@@ -156,8 +152,8 @@ def test_opcode_8():
 
 
 def test_mode_opcodes():
-    opcode = [1002,4,3,4,33]
-    result = [1002,4,3,4,99]
+    opcode = [1002, 4, 3, 4, 33]
+    result = [1002, 4, 3, 4, 99]
     object = IntCode(opcode)
     object.run()
     assert object.opcode == result
@@ -202,7 +198,7 @@ def test_too_many_opcode_values():
     object.run()
     assert object.opcode == result
 
-    
+
 def test_invalid_opcode_position():
     opcode = [1, 0, 0, 3]
     result = [1, 0, 0, 2]
@@ -248,17 +244,17 @@ def test_print_opcode():
 def test_new_opcodes(capsys):
     filename = "test2.txt"
     opcode = read_opcode(filename)
-    with mock.patch('builtins.input', return_value=5):
+    with mock.patch("builtins.input", return_value=5):
         object1 = IntCode(opcode)
         object1.run()
         captured = capsys.readouterr()
         assert captured.out == "OUTPUT: 999\n"
-    with mock.patch('builtins.input', return_value=8):
+    with mock.patch("builtins.input", return_value=8):
         object2 = IntCode(opcode)
         object2.run()
         captured = capsys.readouterr()
         assert captured.out == "OUTPUT: 1000\n"
-    with mock.patch('builtins.input', return_value=12):
+    with mock.patch("builtins.input", return_value=12):
         object3 = IntCode(opcode)
         object3.run()
         captured = capsys.readouterr()

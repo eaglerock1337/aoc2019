@@ -2,35 +2,27 @@ import os
 
 OPCODE_FILE = "opcode.txt"
 OPCODE_FUNC = {
-    '01': '_opcode_1',
-    '02': '_opcode_2',
-    '03': '_opcode_3',
-    '04': '_opcode_4',
-    '05': '_opcode_5',
-    '06': '_opcode_6',
-    '07': '_opcode_7',
-    '08': '_opcode_8'
+    "01": "_opcode_1",
+    "02": "_opcode_2",
+    "03": "_opcode_3",
+    "04": "_opcode_4",
+    "05": "_opcode_5",
+    "06": "_opcode_6",
+    "07": "_opcode_7",
+    "08": "_opcode_8",
 }
-OPCODE_PARAMS = {
-    '01': 4,
-    '02': 4,
-    '03': 2,
-    '04': 2,
-    '05': 3,
-    '06': 3,
-    '07': 4,
-    '08': 4
-}
+OPCODE_PARAMS = {"01": 4, "02": 4, "03": 2, "04": 2, "05": 3, "06": 3, "07": 4, "08": 4}
 LAST_VAL_FORCED_REF = {
-    '01': True,
-    '02': True,
-    '03': True,
-    '04': False,
-    '05': False,
-    '06': False,
-    '07': True,
-    '08': True,
+    "01": True,
+    "02": True,
+    "03": True,
+    "04": False,
+    "05": False,
+    "06": False,
+    "07": True,
+    "08": True,
 }
+
 
 class IntCode:
     """
@@ -158,40 +150,51 @@ class IntCode:
             else:
                 opcode = string[-2:]
                 instruction = list(string[:-2])
-            
+
             if opcode in OPCODE_FUNC:
                 params = []
 
                 if self.position + OPCODE_PARAMS[opcode] > self.length:
-                    print(f"Invalid Opcode reference at {self.position}: Opcode string has run out of values!")
+                    print(
+                        f"Invalid Opcode reference at {self.position}: Opcode string has run out of values!"
+                    )
                     return
 
                 for i in range(1, OPCODE_PARAMS[opcode]):
                     try:
-                        mode = instruction.pop() 
+                        mode = instruction.pop()
                     except IndexError:
-                        mode = '0'
-                    
-                    if mode == '0':
+                        mode = "0"
+
+                    if mode == "0":
                         param_pos = self.opcode[self.position + i]
                         if param_pos < self.length:
                             params.append(param_pos)
                         else:
-                            print(f"Invalid Opcode reference at {self.position}: {param_pos} is out of range!")
+                            print(
+                                f"Invalid Opcode reference at {self.position}: {param_pos} is out of range!"
+                            )
                             return
 
-                    elif mode == '1':
-                        if i == OPCODE_PARAMS[opcode] - 1 and LAST_VAL_FORCED_REF[opcode]:
-                            print(f"Invalid Opcode reference at {self.position}: Opcode {opcode} requires a location for its last value!")
+                    elif mode == "1":
+                        if (
+                            i == OPCODE_PARAMS[opcode] - 1
+                            and LAST_VAL_FORCED_REF[opcode]
+                        ):
+                            print(
+                                f"Invalid Opcode reference at {self.position}: Opcode {opcode} requires a location for its last value!"
+                            )
                             return
 
                         params.append(self.position + i)
-                
+
                 if len(instruction) > 0:
-                    print(f"Invalid Opcode at {self.position}: {self.opcode[self.position]} has too many characters!")
+                    print(
+                        f"Invalid Opcode at {self.position}: {self.opcode[self.position]} has too many characters!"
+                    )
                     return
 
-                function=getattr(self, OPCODE_FUNC[opcode])
+                function = getattr(self, OPCODE_FUNC[opcode])
                 advance = function(params)
                 if advance:
                     self.position += OPCODE_PARAMS[opcode]

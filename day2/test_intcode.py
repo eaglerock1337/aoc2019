@@ -4,7 +4,7 @@ from day2.intcode import (
     print_opcode,
     patch_me,
     fly_like_an_eagle,
-    we_got_dodgson_here
+    we_got_dodgson_here,
 )
 
 # Tests
@@ -12,7 +12,7 @@ def test_intcode_create():
     opcode = [1, 9, 10, 3, 99]
     object = IntCode(opcode)
     assert isinstance(object, IntCode)
-    
+
 
 def test_intcode_values():
     opcode = [1, 9, 10, 3, 99]
@@ -73,7 +73,7 @@ def test_opcode_2():
     object = IntCode(opcode)
     object.run()
     assert object.opcode == result_opcode
-    
+
 
 def test_invalid_opcode():
     opcode = [1, 0, 0, 3, 3]

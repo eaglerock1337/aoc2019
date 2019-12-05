@@ -1,9 +1,4 @@
-from day1.rocket import(
-    import_values,
-    fuel_calc,
-    fuel_recurse_calc,
-    do_the_mario
-)
+from day1.rocket import import_values, fuel_calc, fuel_recurse_calc, do_the_mario
 
 # Tests
 

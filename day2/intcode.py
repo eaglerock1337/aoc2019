@@ -40,7 +40,7 @@ class IntCode:
         else:
             print("Invalid Opcode reference!")
             return
-        
+
         if sum_pos < self.length:
             self.opcode[sum_pos] = value_1 + value_2
         else:
