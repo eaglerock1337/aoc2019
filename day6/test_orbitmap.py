@@ -1,4 +1,10 @@
-from day6.orbitmap import Body, OrbitMap, read_map_file, neil_degrasse_tyson
+from day6.orbitmap import (
+    Body,
+    OrbitMap,
+    read_map_file,
+    neil_degrasse_tyson,
+    kerbal_space_program,
+)
 
 DATA = [
     "COM)B",
@@ -13,6 +19,9 @@ DATA = [
     "J)K",
     "K)L",
 ]
+
+XFER_DATA = DATA.copy()
+XFER_DATA.extend(["K)YOU", "I)SAN"])
 
 # Tests
 
@@ -154,6 +163,66 @@ def test_orbitmap_fail_validate_orbits_missing_parent():
     assert not object.validate_orbits()
 
 
+def test_orbitmap_get_all_orbits():
+    data = ["A)B", "B)C", "C)D"]
+    object = OrbitMap()
+    assert object.load_map_data(data)
+    assert object._get_all_orbits("A") == []
+    assert object._get_all_orbits("B") == ["A"]
+    assert object._get_all_orbits("C") == ["B", "A"]
+    assert object._get_all_orbits("D") == ["C", "B", "A"]
+
+
+def test_orbitmap_get_common_parent():
+    data = ["A)B", "B)C", "C)D", "D)E", "B)F", "F)G"]
+    object = OrbitMap()
+    assert object.load_map_data(data)
+    assert object._get_common_parent("E", "G") == "B"
+
+
+def test_orbitmap_fail_get_common_parent_missing_satellite():
+    data = ["A)B", "B)C", "C)D", "D)E", "B)F", "F)G", "H)I"]
+    object = OrbitMap()
+    assert object.load_map_data(data)
+    assert object._get_common_parent("E", "J") == -1
+
+
+def test_orbitmap_fail_get_common_parent_missing_parent():
+    data = ["A)B", "B)C", "C)D", "D)E", "B)F", "F)G", "H)I"]
+    object = OrbitMap()
+    assert object.load_map_data(data)
+    assert object._get_common_parent("E", "H") == -1
+
+
+def test_orbitmap_fail_get_common_parent_no_common_parent():
+    data = ["A)B", "B)C", "C)D", "D)E", "B)F", "F)G", "H)I"]
+    object = OrbitMap()
+    assert object.load_map_data(data)
+    assert object._get_common_parent("E", "I") == -1
+
+
+def test_orbitmap_calc_parent_transfer():
+    data = ["A)B", "B)C", "C)D", "D)E", "B)F", "F)G"]
+    object = OrbitMap()
+    assert object.load_map_data(data)
+    assert object._calc_parent_transfer("E", "B") == 2
+    assert object._calc_parent_transfer("G", "B") == 1
+    assert object._calc_parent_transfer("C", "B") == 0
+
+
+def test_orbitmap_calc_transfer():
+    object = OrbitMap()
+    assert object.load_map_data(XFER_DATA)
+    assert object.calc_transfer("YOU", "SAN") == 4
+
+
+def test_orbitmap_fail_calc_transfer_no_common_parent():
+    data = ["A)B", "B)C", "C)D", "D)E", "B)F", "F)G", "H)I"]
+    object = OrbitMap()
+    assert object.load_map_data(data)
+    assert object.calc_transfer("E", "I") == -1
+
+
 def test_read_map_file():
     map_file = "test.txt"
     expected = [
@@ -182,4 +251,22 @@ def test_neil_degrasse_tyson():
 def test_neil_degrasse_tyson_fail_bad_checksum():
     map_file = "test_bad.txt"
     result = neil_degrasse_tyson(map_file)
+    assert result == -1
+
+
+def test_kerbal_space_program():
+    map_file = "test_transfer.txt"
+    result = kerbal_space_program(map_file)
+    assert result == 4
+
+
+def test_kerbal_space_program_fail_bad_checksum():
+    map_file = "test_bad.txt"
+    result = kerbal_space_program(map_file)
+    assert result == -1
+
+
+def test_kerbal_space_program_fail_calc_transfer():
+    map_file = "test_transfer_bad.txt"
+    result = kerbal_space_program(map_file)
     assert result == -1
