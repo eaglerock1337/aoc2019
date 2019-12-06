@@ -20,14 +20,15 @@ The virtual environment is managed by pipenv. The scripts themselves do not have
 $ sudo pip3 install pipenv
 $ pipenv install -d
 $ pipenv shell
-(aoc2019) $
+(aoc2019) $ python aoc1
 ```
 
 ### Running Scripts
 
-Scripts can be run by entering the pipenv shell or prefixing the command with `pipenv run`:
+While the scripts don't strictly require the virtual environment to run (the only dependencies so far are for development and testing), scripts can be run by entering the pipenv shell or prefixing the command with `pipenv run`:
 
 ```
+$ python3.7 aoc1/rocket.py
 $ pipenv run python aoc1/rocket.py
 $ pipenv shell
 (aoc2019) $ python aoc1/rocket.py
