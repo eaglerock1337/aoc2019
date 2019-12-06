@@ -37,7 +37,7 @@ $ pipenv shell
 
 Note that scripts can be run either in the root directory or in the directory for that day.
 
-### Running tests
+### Running Tests
 
 Tests require the development dependencies, so ensure that `pipenv install -d` is run before running tests. Tests also check for coverage through the pytest-cov plugin.
 
@@ -49,5 +49,11 @@ While 100% test coverage has been achieved for these examples, it does exclude t
 (aoc2019) $ pytest --cov=.
 (aoc2019) $ pytest --cov=. --cov-report term-missing -v
 ```
+
+### Other Info
+
+I'm using PyTest as my testing framework, and borrow some helpers from Mock. I use Black for code formatting, and have PyLint installed, but haven't been linting my code throughout the process. I might try to lint all of the code if I feel like it, but I doubt I'll get to it.
+
+When challenges call upon earlier code (such as day 5 adding on to the intcode computer from day 2), I copy the existing code into the new folder and work from there, so each day has a fresh directory to work with. This will definitely screw up PyLint, so if I am going to actually lint my code, I'm going to have to ignore duplicate code between days.
 
 Feel free use my code as inspiration for your own solutions, and feedback is welcomed! Thanks for viewing!
