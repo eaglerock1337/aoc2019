@@ -1,6 +1,6 @@
 # Advent of Code 2019
 
-My Personal Attempt at the Advent of Code 2019 challenge.
+My personal attempt at the Advent of Code 2019 challenge.
 
 www.adventofcode.com
 
@@ -50,7 +50,7 @@ While 100% test coverage has been achieved for these examples, it does exclude t
 (aoc2019) $ pytest --cov=. --cov-report term-missing -v
 ```
 
-### Other Info
+## Other Info
 
 I'm using PyTest as my testing framework, and borrow some helpers from Mock. I use Black for code formatting, and have PyLint installed, but haven't been linting my code throughout the process. I might try to lint all of the code if I feel like it, but I doubt I'll get to it.
 
