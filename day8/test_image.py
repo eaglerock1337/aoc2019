@@ -1,6 +1,7 @@
-from day8.image import SpaceImage, read_image_file, paging_mr_herman
+from day8.image import SpaceImage, read_image_file, paging_mr_herman, remember_the_alamo
 
 TEST = "000033111233010133012033000133001233012223"
+TEST2 = "0222112222120000"
 
 # Tests
 
@@ -15,6 +16,7 @@ def test_spaceimage_values():
     assert object.width == 3
     assert object.height == 2
     assert object.image == []
+    assert object.decoded == []
 
 
 def test_spaceimage_import_data():
@@ -70,6 +72,37 @@ def test_spaceimage_get_checksum():
     assert checksum == 3
 
 
+def test_spaceimage_get_visible_pixel():
+    object = SpaceImage(2, 2)
+    assert object.import_data(TEST2)
+    assert object._get_visible_pixel(0, 0) == "0"
+    assert object._get_visible_pixel(0, 1) == "1"
+    assert object._get_visible_pixel(1, 0) == "1"
+    assert object._get_visible_pixel(1, 1) == "0"
+
+
+def test_spaceimage_fail_get_visible_pixel():
+    data = "2222212222122000"
+    object = SpaceImage(2, 2)
+    assert object.import_data(data)
+    assert object._get_visible_pixel(0, 0) == -1
+
+
+def test_spaceimage_decode():
+    object = SpaceImage(2, 2)
+    result = ["01", "10"]
+    assert object.import_data(TEST2)
+    assert object.decode()
+    assert object.decoded == result
+
+
+def test_spaceimage_fail_decode_missing_pixel():
+    data = "2222212222122000"
+    object = SpaceImage(2, 2)
+    assert object.import_data(data)
+    assert not object.decode()
+
+
 def test_read_image_file():
     filename = "test.txt"
     result = read_image_file(filename)
@@ -90,3 +123,28 @@ def test_paging_mr_herman_bad_file():
     height = 2
     checksum = paging_mr_herman(filename, width, height)
     assert checksum == -1
+
+
+def test_remember_the_alamo():
+    filename = "test2.txt"
+    result = ["01", "10"]
+    width = 2
+    height = 2
+    image = remember_the_alamo(filename, width, height)
+    assert image == result
+
+
+def test_remember_the_alamo_fail_import():
+    filename = "test_bad.txt"
+    width = 2
+    height = 2
+    image = remember_the_alamo(filename, width, height)
+    assert image == -1
+
+
+def test_remember_the_alamo_fail_decode():
+    filename = "test2_bad.txt"
+    width = 2
+    height = 2
+    image = remember_the_alamo(filename, width, height)
+    assert image == -1
