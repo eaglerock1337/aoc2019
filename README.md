@@ -20,7 +20,7 @@ The virtual environment is managed by pipenv. The scripts themselves do not have
 $ sudo pip3 install pipenv
 $ pipenv install -d
 $ pipenv shell
-(aoc2019) $ python aoc1
+(aoc2019) $
 ```
 
 ### Running Scripts
