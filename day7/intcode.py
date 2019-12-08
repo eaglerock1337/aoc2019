@@ -47,6 +47,7 @@ class IntCode:
         self.input_list = input_list.copy()
         self.input_list.reverse()  # Reversed so I can use pop() instead of writing a Queue
         self.output = []
+        self.halt = False
 
     def patch(self, noun, verb):
         """
@@ -54,6 +55,12 @@ class IntCode:
         """
         self.opcode[1] = noun
         self.opcode[2] = verb
+
+    def add_input(self, new_input):
+        """
+        Adds a single input to the running IntCode program.
+        """
+        self.input_list.insert(0, new_input)
 
     def _opcode_1(self, params):
         """
@@ -85,8 +92,8 @@ class IntCode:
         try:
             value = self.input_list.pop()
         except IndexError:
-            print("Error: Ran out of values in input_list!")
-            return -1
+            self.halt = True
+            return True
         self.opcode[params.pop()] = value
         return True
 
@@ -156,6 +163,10 @@ class IntCode:
         """
         Run the intcode program by parsing through the opcode list.
         """
+        if self.halt:
+            self.output = []
+            self.halt = False
+
         while self.position < self.length:
             if self.opcode[self.position] == 99:
                 return self.output
@@ -213,9 +224,10 @@ class IntCode:
 
                 function = getattr(self, OPCODE_FUNC[opcode])
                 advance = function(params)
-                if advance == -1:
-                    print(f"Error at {self.position}: Opcode returned an error!")
-                    return -1
+
+                if self.halt:
+                    return self.output
+
                 if advance:
                     self.position += OPCODE_PARAMS[opcode]
             else:

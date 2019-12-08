@@ -16,6 +16,7 @@ def test_intcode_values():
     assert object.length == 5
     assert object.position == 0
     assert object.input_list == []
+    assert not object.halt
 
 
 def test_intcode_values_input_list():
@@ -26,6 +27,14 @@ def test_intcode_values_input_list():
     assert object.length == 5
     assert object.position == 0
     assert object.input_list == [3, 2, 1]
+
+
+def test_intcode_add_input():
+    opcode = [1, 9, 10, 3, 99]
+    input_list = [1, 2, 3]
+    object = IntCode(opcode, input_list)
+    object.add_input(4)
+    assert object.input_list == [4, 3, 2, 1]
 
 
 def test_intcode_run():
@@ -104,8 +113,24 @@ def test_opcode_3_not_enough_inputs():
     result = [3, 7, 3, 8, 3, 9, 99, 4, 2, 0]
     input_list = [4, 2]
     object = IntCode(opcode, input_list)
-    assert object.run() == -1
+    assert object.run() == []
     assert object.opcode == result
+    assert object.position == 4
+    assert object.halt
+
+
+def test_opcode_3_resume_run():
+    opcode = [3, 7, 3, 8, 3, 9, 99, 0, 0, 0]
+    result = [3, 7, 3, 8, 3, 9, 99, 4, 2, 42]
+    input_list = [4, 2]
+    object = IntCode(opcode, input_list)
+    assert object.run() == []
+    assert object.halt
+    assert object.position == 4
+    object.add_input(42)
+    assert object.run() == []
+    assert object.opcode == result
+    assert not object.halt
 
 
 def test_opcode_4():
