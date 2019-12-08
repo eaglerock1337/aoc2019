@@ -44,22 +44,22 @@ def test_spaceimage_fail_import_data_missing_line():
 def test_spaceimage_get_layer_value_sum():
     object = SpaceImage(3, 2)
     assert object.import_data(TEST)
-    assert object._get_layer_value_sum(0, '0') == 4
-    assert object._get_layer_value_sum(1, '1') == 3
-    assert object._get_layer_value_sum(2, '2') == 0
-    assert object._get_layer_value_sum(6, '2') == 3
+    assert object._get_layer_value_sum(0, "0") == 4
+    assert object._get_layer_value_sum(1, "1") == 3
+    assert object._get_layer_value_sum(2, "2") == 0
+    assert object._get_layer_value_sum(6, "2") == 3
 
 
 def test_spaceimage_find_min_layer():
     object = SpaceImage(3, 2)
     assert object.import_data(TEST)
-    layer = object._find_min_layer('0')
+    layer = object._find_min_layer("0")
     assert layer == 1
-    layer = object._find_min_layer('1')
+    layer = object._find_min_layer("1")
     assert layer == 0
-    layer = object._find_min_layer('2')
+    layer = object._find_min_layer("2")
     assert layer == 0
-    layer = object._find_min_layer('3')
+    layer = object._find_min_layer("3")
     assert layer == 6
 
 

@@ -10,6 +10,7 @@ class SpaceImage:
     """
     The class for defining the Space Image Format.
     """
+
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -19,8 +20,8 @@ class SpaceImage:
         """
         Import image data in Space Image Format
         """
-        chunks = [data[i:i+self.width] for i in range(0, len(data), self.width)]
-        
+        chunks = [data[i : i + self.width] for i in range(0, len(data), self.width)]
+
         layer = 0
         self.image.append([])
 
@@ -28,17 +29,17 @@ class SpaceImage:
             if len(self.image[layer]) == self.height:
                 layer += 1
                 self.image.append([])
-                
+
             if len(chunk) != self.width:
                 print("Error: Not enough data to fill line!")
                 return False
-            
+
             self.image[layer].append(chunk)
 
         if len(self.image[-1]) != self.height:
             print("Error: Last layer does not have the right height!")
             return False
-            
+
         return True
 
     def _get_layer_value_sum(self, layer, value):
@@ -62,9 +63,9 @@ class SpaceImage:
         return min_layer
 
     def get_checksum(self):
-        layer = self._find_min_layer('0')
-        ones = self._get_layer_value_sum(layer, '1')
-        twos = self._get_layer_value_sum(layer, '2')
+        layer = self._find_min_layer("0")
+        ones = self._get_layer_value_sum(layer, "1")
+        twos = self._get_layer_value_sum(layer, "2")
         return ones * twos
 
 
@@ -86,11 +87,11 @@ def paging_mr_herman(filename, width, height):
     """
     image_data = read_image_file(filename)
     image = SpaceImage(width, height)
-    
+
     if not image.import_data(image_data):
         print("Error: Could not import data!")
         return -1
-    
+
     checksum = image.get_checksum()
     print(f"Checksum: {checksum}")
 
