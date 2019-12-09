@@ -23,8 +23,8 @@ def read_opcode(filename):
 def thank_you_captain(filename, instruction):
     """
     Captain Riggs! Captain Murtaugh! Thank you Captain! Thank you Captain!
-    Thank YOU Captain! Thank YOU Captain! Oh Captain, My Captain!
-    Enough with the Captain shit! Now get out of here!
+    Thank YOU, Captain! Thank YOU, Captain! Oh Captain, My Captain!
+    ENOUGH WITH THE CAPTAIN SHIT! Now, get out of here!
     """
     boost = read_opcode(filename)
     computer = IntCode(boost, [instruction])
