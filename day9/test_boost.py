@@ -18,5 +18,5 @@ def test_read_opcode():
 
 def test_thank_you_captain():
     filename = "test.txt"
-    result = thank_you_captain(filename)
+    result = thank_you_captain(filename, 1)
     assert result == 42
