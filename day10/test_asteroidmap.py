@@ -26,18 +26,20 @@ def test_asteroidmap_create():
     object = AsteroidMap()
     assert isinstance(object, AsteroidMap)
     assert object.asteroid == ()
-    assert object.best_location == (-1, -1)
+    assert object.basex == -1
+    assert object.basey == -1
     assert object.best_visibility == -1
+    assert object.vaporized == []
 
 
 def test_asteroidmap_import_map():
-    result = (
-        (False, True, False, False, True),
-        (False, False, False, False, False),
-        (True, True, True, True, True),
-        (False, False, False, False, True),
-        (False, False, False, True, True),
-    )
+    result = [
+        [False, True, False, False, True],
+        [False, False, False, False, False],
+        [True, True, True, True, True],
+        [False, False, False, False, True],
+        [False, False, False, True, True],
+    ]
     object = AsteroidMap()
     assert object.import_map(TEST)
     assert object.asteroid == result
@@ -80,7 +82,32 @@ def test_asteroidmap_find_new_base():
     assert object.import_map(TEST)
     assert object.find_new_base() == 8
     assert object.best_visibility == 8
-    assert object.best_location == (3, 4)
+    assert object.basex == 3
+    assert object.basey == 4
+
+
+def test_asteroidmap_scan_for_target():
+    object = AsteroidMap()
+    assert object.import_map(TEST)
+    assert object.find_new_base() == 8
+    targets = object._scan_for_target()
+    assert targets == [(3, 2), (4, 0), (4 ,2), (4, 3), (4, 4), (0, 2), (1, 2), (2, 2)]
+
+
+def test_asteroidmap_vaporize():
+    result = [(3, 2), (4, 0), (4 ,2), (4, 3), (4, 4), (0, 2), (1, 2), (2, 2), (1, 0)]
+    object = AsteroidMap()
+    assert object.import_map(TEST)
+    assert object.find_new_base() == 8
+    assert object.vaporize()
+    assert object.vaporized == result
+
+
+def test_asteroidmap_fail_vaporize():
+    object = AsteroidMap()
+    assert object.import_map(TEST)
+    assert not object.vaporize()
+
 
 def test_read_mapfile():
     filename = "test.txt"

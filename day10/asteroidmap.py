@@ -1,6 +1,6 @@
 import os
 
-from math import gcd
+from math import atan2, gcd
 
 
 MAP_FILE = "map.txt"
@@ -12,8 +12,10 @@ class AsteroidMap:
     """
     def __init__(self):
         self.asteroid = ()
-        self.best_location = (-1, -1)
+        self.basex = -1
+        self.basey = -1
         self.best_visibility = -1
+        self.vaporized = []
 
     def import_map(self, map_data):
         """
@@ -32,9 +34,9 @@ class AsteroidMap:
                     print("Error importing mapfile: invalid character!")
                     return False
 
-            maplist.append(tuple(mapline))
+            maplist.append(mapline)
 
-        self.asteroid = tuple(maplist)
+        self.asteroid = maplist
         return True
 
     def _is_visible(self, basex, basey, x, y):
@@ -86,10 +88,44 @@ class AsteroidMap:
                 if self.asteroid[ypos][xpos]:
                     visible = self._get_visible(xpos, ypos)
                     if visible > self.best_visibility:
-                        self.best_location = (xpos, ypos)
+                        self.basex = xpos
+                        self.basey = ypos
                         self.best_visibility = visible
 
         return self.best_visibility
+
+    def _scan_for_target(self):
+        """
+        Scan for visible targets and return a list sorted by the 2-argument arctangent.
+        """
+        targets = []
+        for xpos in range(len(self.asteroid[0])):
+            for ypos in range(len(self.asteroid)):
+                if self.asteroid[ypos][xpos]:
+                    if self._is_visible(self.basex, self.basey, xpos, ypos):
+                        radian = atan2(xpos - self.basex, ypos - self.basey)
+                        targets.append((xpos, ypos, radian))
+
+        targets.sort(key=lambda x: x[2], reverse=True)
+        return [x[:2] for x in targets]
+
+    def vaporize(self):
+        """
+        Vaporize all targets and log the order in which they were vaporized.
+        """
+        if self.basex == self.basey == -1:
+            print("Error: Cannot vaporize before finding the new base first!")
+            return False
+
+        while True:
+            targets = self._scan_for_target()
+            if targets == []:
+                print("Annihilation complete!")
+                return True
+
+            for x, y in targets:
+                self.vaporized.append((x, y))
+                self.asteroid[y][x] = False
 
 
 def read_mapfile(filename):
@@ -116,10 +152,24 @@ def all_your_base(filename):
     move_zig.import_map(map_data)
     best = move_zig.find_new_base()
     print(f"Best visibility: {best}")
-    print(f"Best location: {move_zig.best_location}")
+    print(f"Best location: {move_zig.basex},{move_zig.basey}")
+    loc = (move_zig.basex, move_zig.basey)
 
-    return best, move_zig.best_location
+    return best, loc
+
+
+def dr_evil(filename):
+    """
+    Mr. Evil...
+    DOCTOR EVIL!
+    I didn't go to 8 years of evil medical school to be called Mister, thank you very much!
+    """
+    map_data = read_mapfile(filename)
+    laser_beam = AsteroidMap()
+    laser_beam.import_map(map_data)
+    
 
 
 if __name__ == "__main__":
     all_your_base(MAP_FILE)
+    dr_evil(MAP_FILE)
