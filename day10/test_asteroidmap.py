@@ -1,4 +1,4 @@
-from day10.asteroidmap import AsteroidMap, read_mapfile, all_your_base
+from day10.asteroidmap import AsteroidMap, read_mapfile, all_your_base, dr_evil
 
 TEST = [
     ".#..#",
@@ -109,35 +109,62 @@ def test_asteroidmap_fail_vaporize():
     assert not object.vaporize()
 
 
+def test_asteroidmap_vaporize_validate():
+    testfile = "test4.txt"
+    map_data = read_mapfile(testfile)
+    object = AsteroidMap()
+    assert object.import_map(map_data)
+    assert object.find_new_base()
+    assert object.vaporize()
+    assert object.get_vaporized(1) == (11, 12)
+    assert object.get_vaporized(2) == (12, 1)
+    assert object.get_vaporized(3) == (12, 2)
+    assert object.get_vaporized(10) == (12, 8)
+    assert object.get_vaporized(20) == (16, 0)
+    assert object.get_vaporized(50) == (16, 9)
+    assert object.get_vaporized(100) == (10, 16)
+    assert object.get_vaporized(199) == (9, 6)
+    assert object.get_vaporized(200) == (8, 2)
+    assert object.get_vaporized(201) == (10, 9)
+    assert object.get_vaporized(299) == (11, 1)
+    assert len(object.vaporized) == 299
+
+
 def test_read_mapfile():
     filename = "test.txt"
     result = read_mapfile(filename)
     assert TEST_FILE == result
 
 
-def test_asteroidmap_all_your_base_1():
+def test_all_your_base_1():
     filename = "test.txt"
     vis, loc = all_your_base(filename)
     assert vis == 33
     assert loc == (5, 8)
 
 
-def test_asteroidmap_all_your_base_2():
+def test_all_your_base_2():
     filename = "test2.txt"
     vis, loc = all_your_base(filename)
     assert vis == 35
     assert loc == (1, 2)
 
 
-def test_asteroidmap_all_your_base_3():
+def test_all_your_base_3():
     filename = "test3.txt"
     vis, loc = all_your_base(filename)
     assert vis == 41
     assert loc == (6, 3)
 
 
-def test_asteroidmap_all_your_base_4():
+def test_all_your_base_4():
     filename = "test4.txt"
     vis, loc = all_your_base(filename)
     assert vis == 210
     assert loc == (11, 13)
+
+
+def test_dr_evil():
+    filename = "test4.txt"
+    answer = dr_evil(filename)
+    assert answer == 802

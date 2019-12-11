@@ -127,6 +127,12 @@ class AsteroidMap:
                 self.vaporized.append((x, y))
                 self.asteroid[y][x] = False
 
+    def get_vaporized(self, number):
+        """
+        Return a tuple of the vaporized list by order of vaporization.
+        """
+        return self.vaporized[number - 1]
+
 
 def read_mapfile(filename):
     """
@@ -167,7 +173,13 @@ def dr_evil(filename):
     map_data = read_mapfile(filename)
     laser_beam = AsteroidMap()
     laser_beam.import_map(map_data)
-    
+    laser_beam.find_new_base()
+    laser_beam.vaporize()
+    xpos, ypos = laser_beam.get_vaporized(200)
+    answer = 100 * xpos + ypos
+    print(f"The answer: {answer}")
+
+    return answer
 
 
 if __name__ == "__main__":
