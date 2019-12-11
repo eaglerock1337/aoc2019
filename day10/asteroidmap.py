@@ -10,6 +10,7 @@ class AsteroidMap:
     """
     Class for handling the Asteroid Map and all calcuations needed.
     """
+
     def __init__(self):
         self.asteroid = ()
         self.basex = -1
@@ -50,7 +51,7 @@ class AsteroidMap:
         ydiff = abs(basey - y)
 
         if xdiff == ydiff == 0:
-            return False    # Seeing yourself doesn't count
+            return False  # Seeing yourself doesn't count
 
         divisor = gcd(xdiff, ydiff)
         if divisor == 1:
@@ -143,7 +144,7 @@ def read_mapfile(filename):
         filename = os.path.join("day10", filename)
 
     with open(filename, "r") as map_file:
-        return  map_file.read().splitlines()
+        return map_file.read().splitlines()
 
 
 def all_your_base(filename):

@@ -91,11 +91,11 @@ def test_asteroidmap_scan_for_target():
     assert object.import_map(TEST)
     assert object.find_new_base() == 8
     targets = object._scan_for_target()
-    assert targets == [(3, 2), (4, 0), (4 ,2), (4, 3), (4, 4), (0, 2), (1, 2), (2, 2)]
+    assert targets == [(3, 2), (4, 0), (4, 2), (4, 3), (4, 4), (0, 2), (1, 2), (2, 2)]
 
 
 def test_asteroidmap_vaporize():
-    result = [(3, 2), (4, 0), (4 ,2), (4, 3), (4, 4), (0, 2), (1, 2), (2, 2), (1, 0)]
+    result = [(3, 2), (4, 0), (4, 2), (4, 3), (4, 4), (0, 2), (1, 2), (2, 2), (1, 0)]
     object = AsteroidMap()
     assert object.import_map(TEST)
     assert object.find_new_base() == 8

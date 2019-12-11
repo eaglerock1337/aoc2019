@@ -15,18 +15,26 @@ DIRECTIONS = {
 
 COLORS = (".", "#")
 
+
 class BobRoss:
     """
     Emergency Hull Painting Robot
     Supports Happy Little Trees
     """
-    def __init__(self, program, gridsize = GRID_SIZE):
+
+    def __init__(self, program, gridsize=GRID_SIZE):
         self.direction = 0
         self.panels = []
         self.xpos = int(gridsize / 2) - 1
         self.ypos = int(gridsize / 2) - 1
         self.brain = IntCode(program)
         self.grid = [["." for x in range(gridsize)] for y in range(gridsize)]
+
+    def prime(self):
+        """
+        Paint the current grid position white.
+        """
+        self.grid[self.ypos][self.xpos] = "#"
 
     def run(self):
         """
@@ -66,6 +74,16 @@ class BobRoss:
 
         return True
 
+    def print(self):
+        """
+        Print out the grid of characters.
+        """
+        for y in range(len(self.grid)):
+            row = ""
+            for x in range(len(self.grid[0])):
+                row += self.grid[y][x]
+            print(row)
+
 
 def read_opcode(filename):
     """
@@ -97,5 +115,18 @@ def happy_little_cloud(filename):
     return painted
 
 
+def happy_little_trees(filename, gridsize=GRID_SIZE):
+    """
+    Let's paint a happy little tree.
+    """
+    program = read_opcode(filename)
+    painter = BobRoss(program, gridsize)
+    painter.prime()
+    painter.run()
+    print("Identifier:")
+    painter.print()
+
+
 if __name__ == "__main__":
     happy_little_cloud(ROBOT_FILE)
+    happy_little_trees(ROBOT_FILE)
