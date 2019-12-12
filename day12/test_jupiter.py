@@ -1,4 +1,4 @@
-from day12.jupiter import Jupiter, read_moons
+from day12.jupiter import Jupiter, read_moons, thats_no_moon, ricks_car_battery
 
 TEST = [
     "<x=-1, y=0, z=2>\n",
@@ -90,6 +90,37 @@ def test_jupiter_multi_step():
     assert object.velocity == vel
 
 
+def test_jupiter_get_energy():
+    object = Jupiter()
+    object.import_data(TEST)
+    object.step(10)
+    assert object.get_energy() == 179
+
+
+def test_jupiter_get_period():
+    object = Jupiter()
+    object.import_data(TEST)
+    assert object._get_period(0) == 18
+    assert object._get_period(1) == 28
+    assert object._get_period(2) == 44
+
+
+def test_jupiter_simulate():
+    object = Jupiter()
+    object.import_data(TEST)
+    assert object.simulate() == 2772
+
+
 def test_read_moons():
     file = "test.txt"
     assert read_moons(file) == TEST
+
+
+def test_thats_no_moon():
+    file = "test2.txt"
+    assert thats_no_moon(file, 100) == 1940
+
+
+def test_ricks_car_battery():
+    file = "test2.txt"
+    assert ricks_car_battery(file) == 4686774924
