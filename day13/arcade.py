@@ -9,6 +9,7 @@ class Arcade:
     """
     Arcade cabinet simulator running Intcode software.
     """
+
     def __init__(self, software):
         self.screen = [[0 for x in range(43)] for y in range(23)]
         self.software = IntCode(software)
@@ -106,9 +107,11 @@ def noahs_arcade(filename):
     software = read_opcode(filename)
     game = Arcade(software)
     game.run()
+    print("Here's the screen:")
+    game.print_screen()
     count = game.count_blocks()
 
-    print(f"The number of blocks is: {count}")
+    print(f"\nThe number of blocks is: {count}")
     return count
 
 
@@ -119,6 +122,7 @@ def pinball_wizard(filename):
     """
     software = read_opcode(filename)
     game = Arcade(software)
+    print("Inserting quarter and playing to win...")
     game.insert_quarter()
     game.play_to_win()
 
