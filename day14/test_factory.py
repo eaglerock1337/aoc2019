@@ -27,8 +27,9 @@ TEST2 = [
 
 # Tests
 
+
 def test_reaction_create():
-    ingredients = { 'A': 5, 'B': 10, 'C': 15 }
+    ingredients = {"A": 5, "B": 10, "C": 15}
     object = Reaction("FUEL", 2, ingredients)
     assert isinstance(object, Reaction)
     assert object.name == "FUEL"
@@ -123,7 +124,7 @@ def test_calculate_total_fuel():
     formulas = read_formulas(filename)
     object = NanoFactory()
     object.input_formulas(formulas)
-    assert object.calculate_total_fuel(100000000) == 82892753
+    assert object.calculate_total_fuel() == 82892753
 
 
 def test_read_formulas():

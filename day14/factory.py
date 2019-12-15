@@ -54,7 +54,7 @@ class NanoFactory:
             self.inventory[chemical] += amount
         else:
             self.inventory[chemical] = amount
-        
+
     def _remove_inventory(self, chemical, amount):
         """
         Remove the specified amount of chemical from the inventory.
@@ -94,6 +94,8 @@ class NanoFactory:
                     self._get_inventory(ingredient, needed)
                 self._remove_inventory(ingredient, subamount * reactions)
 
+        self._add_inventory(chemical, reactions * reaction_amount)
+
     def calculate_fuel(self, amount):
         """
         Calculate the amount of ore necessary for the required
@@ -112,9 +114,10 @@ class NanoFactory:
             target = int(floor((upper + lower) / 2))
             if target == lower:
                 return lower
-            print(f"Trying {target}...")
+
             self.reset()
             self.calculate_fuel(target)
+
             if self.total_ore < 0:
                 upper = target
             else:
@@ -173,4 +176,4 @@ def satisfactory(filename):
 
 if __name__ == "__main__":
     minecraft(FORMULA_FILE, 1)
-    # satisfactory(FORMULA_FILE)
+    satisfactory(FORMULA_FILE)
