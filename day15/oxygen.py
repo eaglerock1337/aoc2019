@@ -9,8 +9,8 @@ DROID_FILE = "droid.txt"
 DIRECTION = {
     "NORTH": (0, -1),
     "SOUTH": (0, 1),
-    "EAST": (-1, 0),
-    "WEST": (1, 0),
+    "EAST": (1, 0),
+    "WEST": (-1, 0),
 }
 
 DIR_INPUT = {
@@ -26,11 +26,11 @@ class RepairDroid:
     """
 
     def __init__(self, software, direction="NORTH"):
-        self.map = [[" " for x in range(100)] for y in range(100)]
+        self.map = [[" " for x in range(42)] for y in range(42)]
         self.software = IntCode(software)
         self.opcode = software
-        self.startx = 50
-        self.starty = 50
+        self.startx = 21
+        self.starty = 21
         self.xpos = self.startx
         self.ypos = self.starty
         self.steps = 0
@@ -142,14 +142,48 @@ class RepairDroid:
         """
         VALID_PATHS = []
         for direction, instruction in DIR_INPUT.items():
-            self.software.add_input(insruction)
+            self.software.add_input(instruction)
             output = self.software.run()
-            if output >= 1:
+            code = output.pop()
+
+            target_xpos = self.xpos + DIRECTION[direction][0]
+            target_ypos = self.ypos + DIRECTION[direction][1]
+
+            if code == 0:
+                self.map[target_ypos][target_xpos] = "#"
+            elif code >= 1:
                 VALID_PATHS.append(direction)
+                if code == 1:
+                    self.map[target_ypos][target_xpos] = "."
             self.reset()
 
+        print(f"Found the following paths: {VALID_PATHS}")
+
         for path in VALID_PATHS:
-            
+            self.set_direction(path)
+            while (self.xpos != self.startx or self.ypos != self.starty) or self.steps == 0:
+                self.software.add_input(DIR_INPUT[self.direction])
+                output = self.software.run()
+                code = output.pop()
+
+                if code == 0:
+                    wall_xpos = self.xpos + DIRECTION[self.direction][0]
+                    wall_ypos = self.ypos + DIRECTION[self.direction][1]
+                    self.map[wall_ypos][wall_xpos] = "#"
+                    self.turn_left()
+                else:
+                    self.xpos += DIRECTION[self.direction][0]
+                    self.ypos += DIRECTION[self.direction][1]
+                    self.steps += 1
+                    if code == 1:
+                        self.map[self.ypos][self.xpos] = "."
+                    else:
+                        self.map[self.ypos][self.xpos] = "O"
+                    self.turn_right()
+
+            self.reset()
+
+        self.map[self.starty][self.startx] = "S"
 
 
 def read_opcode(filename):
@@ -189,11 +223,39 @@ def write_map(map_list, filename):
         for line in map_list:
             map_file.write(f"{line}\n")
 
+
 def spongebob_squarepants(filename):
     """
     YUO LIEK KRABBY PATTIES, DON'T YOU SQUIDWARD??????
     """
+    program = read_opcode(filename)
+    droid = RepairDroid(program)
+    droid.trace_map()
+
+    print("The map that was found:")
+    map_data = droid.print_map()
+    for line in map_data:
+        print(line)
+
+    return map_data
+
+
+def route_finder(droid):
+    """
+    """
     pass
+
+
+def squidward_tentacles(programfile, mapfile):
+    """
+    """
+    program = read_opcode(programfile)
+    map_data = read_map(mapfile)
+    droid_template = RepairDroid(program)
+    droid_template.load_map(map_data, 21, 21)
+    
+
+
 
 def patrick_star(filename):
     """
@@ -202,6 +264,7 @@ def patrick_star(filename):
     EAST? I THOUGHT YOU SAID WEAST!
     """
     pass
+
 
 if __name__ == "__main__":
     spongebob_squarepants(DROID_FILE)

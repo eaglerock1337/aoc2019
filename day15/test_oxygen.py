@@ -7,6 +7,7 @@ from day15.oxygen import (
     read_map,
     write_map,
     spongebob_squarepants,
+    squidward_tentacles,
     patrick_star
 )
 
@@ -27,15 +28,15 @@ TEST_MAP_STRING = " #### \n#....#\n#.##.#\n#.O#.#\n #...#\n  ### \n"
 
 
 def test_repairdroid_create():
-    blank = [[" " for x in range(100)] for y in range(100)]
+    blank = [[" " for x in range(42)] for y in range(42)]
     object = RepairDroid(TEST)
     assert object.map == blank
     assert object.software.opcode[: len(TEST)] == TEST
     assert object.opcode == TEST
-    assert object.startx == 50
-    assert object.starty == 50
-    assert object.xpos == 50
-    assert object.ypos == 50
+    assert object.startx == 21
+    assert object.starty == 21
+    assert object.xpos == 21
+    assert object.ypos == 21
     assert object.steps == 0
     assert object.direction == "NORTH"
 
@@ -76,8 +77,8 @@ def test_repairdroid_reset():
     object.ypos = 20
     object.steps = 420
     object.reset()
-    assert object.xpos == 50
-    assert object.ypos == 50
+    assert object.xpos == 21
+    assert object.ypos == 21
     assert object.steps == 0
 
 
@@ -154,7 +155,10 @@ def test_write_map(tmp_path):
 
 
 def test_spongebob_squarepants():
-    pass
+    filename = "droid.txt"
+    map_data = spongebob_squarepants(filename)
+    result = read_map("known_good_map.txt")
+    assert map_data == result
 
 
 def test_patrick_star():
