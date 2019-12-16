@@ -28,8 +28,11 @@ class RepairDroid:
     def __init__(self, software, direction="NORTH"):
         self.map = [[" " for x in range(100)] for y in range(100)]
         self.software = IntCode(software)
+        self.opcode = software
         self.startx = 50
         self.starty = 50
+        self.xpos = self.startx
+        self.ypos = self.starty
         self.steps = 0
         if direction in DIRECTION:
             self.direction = direction
@@ -45,26 +48,108 @@ class RepairDroid:
             return False
 
         self.map = deepcopy(droid.map)
+        self.startx = droid.startx
+        self.starty = droid.starty
+        self.xpos = droid.xpos
+        self.ypos = droid.ypos
+        self.steps = droid.steps
+        self.direction = droid.direction
+        self.software = IntCode(droid.software.opcode)
+        self.software.position = droid.software.position
+        self.software.relative = droid.software.relative
+        self.software.input_list = droid.software.input_list.copy()
+        self.software.output = droid.software.output
+        self.software.halt = droid.software.halt
+        self.opcode = droid.opcode
 
-    def load_map(self, maplist):
+    def reset(self):
         """
-        Input the map from the printable string format.
+        Reset to factory image. Do not pass GO, do not collect $200.
+        """
+        self.software = IntCode(self.opcode)
+        self.xpos = self.startx
+        self.ypos = self.starty
+        self.steps = 0
+        self.direction = "NORTH"
+
+    def set_direction(self, direction):
+        """
+        Force the direction of the bot to the specified direction.
+        """
+        if direction in DIRECTION:
+            self.direction = direction
+            return True
+        else:
+            print(f"Invalid direction: {direction}")
+            return False
+
+    def turn_left(self):
+        """
+        Turn the bot left compared to its current direction.
+        Yes, this is a very lazy implementation.
+        """
+        if self.direction == "NORTH":
+            self.direction = "WEST"
+        elif self.direction == "WEST":
+            self.direction = "SOUTH"
+        elif self.direction == "SOUTH":
+            self.direction = "EAST"
+        else:
+            self.direction = "NORTH"
+
+    def turn_right(self):
+        """
+        Turn the bot right compared to its current direction.
+        Yes, this is a very lazy impmlementation
+        """
+        if self.direction == "NORTH":
+            self.direction = "EAST"
+        elif self.direction == "EAST":
+            self.direction = "SOUTH"
+        elif self.direction == "SOUTH":
+            self.direction = "WEST"
+        else:
+            self.direction = "NORTH"
+
+    def load_map(self, maplist, startx, starty):
+        """
+        Input the map from the printable string format. Requires the startx and starty position as well.
         """
         self.map = []
-        for line in maplist:
+        for line in range(len(maplist)):
             self.map.append([])
-            for char in line:
+            for char in maplist[line]:
                 self.map[line].append(char)
+        self.startx = startx
+        self.starty = starty
+        self.xpos = self.startx
+        self.ypos = self.starty
 
     def print_map(self):
         """
         Output the map as a printable or saveable list.
         """
         printed = []
-        for row in range(len(self.map)):
+        for row in self.map:
             printed.append("".join(row))
 
         return printed
+
+    def trace_map(self):
+        """
+        Trace the map of the room by hugging the right wall until the
+        droid returns to the starting coodinates.
+        """
+        VALID_PATHS = []
+        for direction, instruction in DIR_INPUT.items():
+            self.software.add_input(insruction)
+            output = self.software.run()
+            if output >= 1:
+                VALID_PATHS.append(direction)
+            self.reset()
+
+        for path in VALID_PATHS:
+            
 
 
 def read_opcode(filename):
