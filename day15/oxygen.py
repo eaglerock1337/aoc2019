@@ -6,6 +6,8 @@ from intcode import IntCode
 
 DROID_FILE = "droid.txt"
 
+MAP_FILE = "map_save.txt"
+
 DIRECTION = {
     "NORTH": (0, -1),
     "SOUTH": (0, 1),
@@ -20,15 +22,23 @@ DIR_INPUT = {
     "EAST": 4,
 }
 
+OPPOSITE_DIR = {
+    "NORTH": "SOUTH",
+    "SOUTH": "NORTH",
+    "EAST": "WEST",
+    "WEST": "EAST",
+}
+
 class RepairDroid:
     """
     Repair Droid for repairing the faulty oxygen system.
     """
 
-    def __init__(self, software, direction="NORTH"):
+    def __init__(self, software, number, direction="NORTH"):
         self.map = [[" " for x in range(42)] for y in range(42)]
         self.software = IntCode(software)
         self.opcode = software
+        self.number = number
         self.startx = 21
         self.starty = 21
         self.xpos = self.startx
@@ -186,6 +196,72 @@ class RepairDroid:
         self.map[self.starty][self.startx] = "S"
 
 
+class DroidManager:
+    """
+    Manage multiple Repair Droids for traversing multiple routes.
+    """
+    def __init__(self):
+        self.droids = []
+        self.oxygen_pos = -1
+        self.least_steps = -1
+        self.longest_time = -1
+
+    def prime(self, program, map_data, direction):
+        """
+        Prime the first repair droid with the necessary data. Requires the
+        opcode program, the map data, and the direction to start with.
+        """
+        self.droids.append(RepairDroid(program, 0))
+        self.droids[0].load_map(map_data, 21, 21)
+        self.droids[0].set_direction(direction)
+
+    def find_path(self, droid):
+        """
+        Attempt to find the shortest and path between the entrance and the oxygen
+        system. Will create clones of the droid if multiple pathways are split and
+        track of any successful pathways and the closest path. Will also detect the
+        time it takes to fill the room with oxygen.
+        """
+        while True:
+            droid.software.add_input(DIR_INPUT[droid.direction])
+            output = droid.software.run()
+            code = output.pop()
+            droid.steps += 1
+
+            if code == 2:
+                if self.least_steps == -1 or self.least_steps > droid.steps:
+                    self.least_steps = droid.steps
+                    self.oxygen_pos = (droid.xpos, droid.ypos)
+
+            droid.xpos += DIRECTION[droid.direction][0]
+            droid.ypos += DIRECTION[droid.direction][1]
+            
+            directions = DIRECTION.copy()
+            directions.pop(OPPOSITE_DIR[droid.direction])
+            valid_directions = []
+
+            for look in directions:
+                lookx = droid.xpos + DIRECTION[look][0]
+                looky = droid.ypos + DIRECTION[look][1]
+                if droid.map[looky][lookx] != "#":
+                    valid_directions.append(look)
+
+            if len(valid_directions) == 0:
+                if self.longest_time < droid.steps:
+                    self.longest_time = droid.steps + 1
+                return
+            elif len(valid_directions) == 1:
+                droid.set_direction(valid_directions.pop())
+            else:
+                droid.set_direction(valid_directions.pop())
+                for direction in valid_directions:
+                    new_droid = RepairDroid(droid.opcode, len(self.droids))
+                    new_droid.clone(droid)
+                    new_droid.set_direction(direction)
+                    self.droids.append(new_droid)
+                    self.find_path(new_droid)
+
+
 def read_opcode(filename):
     """
     Read in the opcode from a given filename and return as a list.
@@ -229,7 +305,7 @@ def spongebob_squarepants(filename):
     YUO LIEK KRABBY PATTIES, DON'T YOU SQUIDWARD??????
     """
     program = read_opcode(filename)
-    droid = RepairDroid(program)
+    droid = RepairDroid(program, 0)
     droid.trace_map()
 
     print("The map that was found:")
@@ -240,32 +316,41 @@ def spongebob_squarepants(filename):
     return map_data
 
 
-def route_finder(droid):
-    """
-    """
-    pass
-
-
-def squidward_tentacles(programfile, mapfile):
-    """
-    """
-    program = read_opcode(programfile)
-    map_data = read_map(mapfile)
-    droid_template = RepairDroid(program)
-    droid_template.load_map(map_data, 21, 21)
-    
-
-
-
-def patrick_star(filename):
+def patrick_star(programfile, mapfile, direction):
     """
     Is this the Krusty Krab?
     NO, THIS IS PATRICK.
     EAST? I THOUGHT YOU SAID WEAST!
     """
-    pass
+    program = read_opcode(programfile)
+    map_data = read_map(mapfile)
+    manager = DroidManager()
+    manager.prime(program, map_data, direction)
+    manager.find_path(manager.droids[0])
+    print(f"Shortest Path: {manager.least_steps}")
+    print(f"Oxygen Position: {manager.oxygen_pos}")
+
+    return manager.least_steps, manager.oxygen_pos
+
+
+def mr_krabs(programfile, mapfile, direction, coordinates):
+    """
+    Do you smell it? That smell. A kind of smelly smell.
+    The smelly smell that smells...smelly.
+    """
+    program = read_opcode(programfile)
+    map_data = read_map(mapfile)
+    manager = DroidManager()
+    manager.prime(program, map_data, direction)
+    manager.droids[0].xpos = 34
+    manager.droids[0].ypos = 35
+    manager.find_path(manager.droids[0])
+    print(f"Time to fill chamber: {manager.longest_time} minutes")
+
+    return manager.longest_time
 
 
 if __name__ == "__main__":
     spongebob_squarepants(DROID_FILE)
-    # patrick_star(DROID_FILE)
+    patrick_star(DROID_FILE, MAP_FILE, "EAST")
+    mr_krabs(DROID_FILE, MAP_FILE, "EAST", (34, 35))
