@@ -3,6 +3,7 @@ import os
 NUMBER_FILE = "number.txt"
 PHASE_PATTERN = [0, 1, 0, -1]
 
+
 def generate(number):
     """
     Generate the phase pattern based on the provided number. Produce a list
@@ -65,7 +66,7 @@ def catenate(filename, repeat=1):
 
     with open(filename, "r") as number_file:
         line = number_file.readline()
-        
+
     line = line.strip()
     signal = line * repeat
     return [int(x) for x in signal]

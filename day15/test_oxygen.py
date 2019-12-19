@@ -8,7 +8,7 @@ from day15.oxygen import (
     write_map,
     spongebob_squarepants,
     patrick_star,
-    mr_krabs
+    mr_krabs,
 )
 
 TEST = [3, 10, 104, 1, 104, 1, 6, 10, 11, 99, 0, 0]

@@ -29,6 +29,7 @@ OPPOSITE_DIR = {
     "WEST": "EAST",
 }
 
+
 class RepairDroid:
     """
     Repair Droid for repairing the faulty oxygen system.
@@ -47,7 +48,7 @@ class RepairDroid:
         if direction in DIRECTION:
             self.direction = direction
         else:
-            raise TypeError('The direction input was invalid!')
+            raise TypeError("The direction input was invalid!")
 
     def clone(self, droid):
         """
@@ -171,7 +172,9 @@ class RepairDroid:
 
         for path in VALID_PATHS:
             self.set_direction(path)
-            while (self.xpos != self.startx or self.ypos != self.starty) or self.steps == 0:
+            while (
+                self.xpos != self.startx or self.ypos != self.starty
+            ) or self.steps == 0:
                 self.software.add_input(DIR_INPUT[self.direction])
                 output = self.software.run()
                 code = output.pop()
@@ -200,6 +203,7 @@ class DroidManager:
     """
     Manage multiple Repair Droids for traversing multiple routes.
     """
+
     def __init__(self):
         self.droids = []
         self.oxygen_pos = -1
@@ -235,7 +239,7 @@ class DroidManager:
 
             droid.xpos += DIRECTION[droid.direction][0]
             droid.ypos += DIRECTION[droid.direction][1]
-            
+
             directions = DIRECTION.copy()
             directions.pop(OPPOSITE_DIR[droid.direction])
             valid_directions = []
