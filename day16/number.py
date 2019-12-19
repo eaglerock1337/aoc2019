@@ -10,7 +10,7 @@ def generate(number):
     """
     while True:
         for phase in PHASE_PATTERN:
-            for i in range(number):
+            for _ in range(number):
                 yield phase
 
 
@@ -41,7 +41,22 @@ def congregate(number_list):
     return int(string)
 
 
-def catenate(filename):
+def subjugate(number_list):
+    """
+    Return the result of the real signal, using the offset provided by the
+    first 7 digits of the number. The number list should be passed in with the
+    offset already applied and in reverse order.
+    """
+    sum = 0
+    result = []
+    for i in range(len(number_list)):
+        sum += number_list[i]
+        result.append(sum % 10)
+
+    return result
+
+
+def catenate(filename, repeat=1):
     """
     Read in the number from the provided filename and return as a list of numbers.
     """
@@ -52,10 +67,16 @@ def catenate(filename):
         line = number_file.readline()
         
     line = line.strip()
-    return [int(x) for x in line]
+    signal = line * repeat
+    return [int(x) for x in signal]
 
 
 def illuminate(filename, phases):
+    """
+    Lights?
+    I've changed that...Illuminate...Deluminate! You try it!
+    (through gritted teeth) ...Illuminate...
+    """
     number = catenate(filename)
     for _ in range(phases):
         number = iterate(number)
@@ -65,9 +86,26 @@ def illuminate(filename, phases):
     return answer
 
 
-def deluminate():
-    pass
+def deluminate(filename, phases):
+    """
+    Excuse me sir, what seems to be your boggle?
+    Mah boggle?
+    """
+    number = catenate(filename, 10000)
+    offset = congregate(number[:7])
+    result = number[offset:]
+    result.reverse()
+
+    for _ in range(phases):
+        result = subjugate(result)
+
+    result.reverse()
+    answer = congregate(result[:8])
+    print(f"The result of the real signal after {phases} phases is: {answer}")
+
+    return answer
 
 
 if __name__ == "__main__":
     illuminate(NUMBER_FILE, 100)
+    deluminate(NUMBER_FILE, 100)

@@ -4,17 +4,13 @@ from day16.number import (
     generate,
     iterate,
     congregate,
+    subjugate,
     catenate,
     illuminate,
     deluminate,
 )
 
 TEST = [1, 2, 3, 4, 5, 6, 7, 8]
-
-
-def listed(string):
-    return [int(x) for x in string]
-
 
 # Tests
 
@@ -33,7 +29,7 @@ def test_iterate():
 
 
 def test_iterate_and_congregate():
-    number = iterate(listed(TEST))
+    number = iterate(TEST)
     assert congregate(number) == 48226158
     number = iterate(number)
     assert congregate(number) == 34040438
@@ -41,6 +37,11 @@ def test_iterate_and_congregate():
     assert congregate(number) == 3415518
     number = iterate(number)
     assert congregate(number) == 1029498
+
+
+def test_subjugate():
+    number = subjugate(TEST)
+    assert congregate(number) == 13605186
 
 
 def test_catenate():
@@ -62,3 +63,18 @@ def test_illuminate_2():
 def test_illuminate_3():
     filename = "test4.txt"
     assert illuminate(filename, 100) == 52432133
+
+
+def test_deluminate():
+    filename = "test5.txt"
+    assert deluminate(filename, 100) == 84462026
+
+
+def test_deluminate_2():
+    filename = "test6.txt"
+    assert deluminate(filename, 100) == 78725270
+
+
+def test_deluminate_3():
+    filename = "test7.txt"
+    assert deluminate(filename, 100) == 53553731
