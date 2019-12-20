@@ -1,6 +1,6 @@
 import os
 
-from intcode import IntCode
+from .intcode import IntCode
 
 ARCADE_FILE = "arcade.txt"
 

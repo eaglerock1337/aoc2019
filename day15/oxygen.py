@@ -1,8 +1,8 @@
-from copy import deepcopy
-
 import os
 
-from intcode import IntCode
+from copy import deepcopy
+
+from .intcode import IntCode
 
 DROID_FILE = "droid.txt"
 

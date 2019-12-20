@@ -1,6 +1,6 @@
-from intcode import IntCode
-
 import os
+
+from .intcode import IntCode
 
 BOOST_FILE = "boost.txt"
 

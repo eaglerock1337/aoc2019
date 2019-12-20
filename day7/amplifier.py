@@ -1,8 +1,9 @@
-from itertools import permutations
-
-from intcode import IntCode
 
 import os
+
+from itertools import permutations
+
+from .intcode import IntCode
 
 PROGRAM_FILE = "software.txt"
 PHASES = [0, 1, 2, 3, 4]
