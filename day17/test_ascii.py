@@ -6,6 +6,7 @@ from day17.intcode import IntCode
 from day17.ascii import (
     ASCII,
     read_opcode,
+    wayne,
 )
 
 TEST = [3, 10, 104, 1, 104, 1, 6, 10, 11, 99, 0, 0]
@@ -33,7 +34,7 @@ def test_ascii_create():
 
 
 def test_ascii_build_map():
-    opcode = [104, 46, 104, 46, 104, 46, 104, 10, 104, 35, 104, 35, 104, 35, 104, 10, 104, 46, 104, 35, 104, 60, 99]
+    opcode = [104, 46, 104, 46, 104, 46, 104, 10, 104, 35, 104, 35, 104, 35, 104, 10, 104, 46, 104, 35, 104, 60, 104, 10, 99]
     object = ASCII(opcode)
     object.build_map()
     assert object.map == [[".", ".", "."], ["#", "#", "#"], [".", "#", "<"]]
@@ -65,3 +66,8 @@ def test_read_opcode():
     string = "test.txt"
     result = read_opcode(string)
     assert TEST == result
+
+
+def test_wayne():
+    string = "test2.txt"
+    assert wayne(string) == 1

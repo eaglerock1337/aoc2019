@@ -4,6 +4,13 @@ from intcode import IntCode
 
 ASCII_FILE = "ascii.txt"
 
+ASCII_ROUTINE = [
+    "A,B,A,C,B,C,B,C,A,C",
+    "R,12,L,6,R,12",
+    "L,8,L,6,L,10",
+    "R,12,L,10,L,6,R,10",
+]
+
 
 class ASCII:
     """
@@ -22,6 +29,9 @@ class ASCII:
         results to a map of characters as well as a single string.
         """
         output = self.program.run()
+        while output[-1] == 10:
+            output.pop()
+
         output.reverse()
         self.map.append([])
         maprow = 0
@@ -31,8 +41,8 @@ class ASCII:
             self.mapstring += char
 
             if char == "\n":
-                maprow += 1
                 self.map.append([])
+                maprow += 1
             else:
                 self.map[maprow].append(char)
     
@@ -67,6 +77,8 @@ class ASCII:
         Return the alignment parameter sum.
         """
         self._get_intersections()
+
+        print(self.mapstring)
 
         sum = 0
         for x, y in self.intersections:
@@ -105,6 +117,7 @@ def wayne(filename):
 
     print(f"The alignment sum is: {answer}")
     return answer
+    
 
 if __name__ == "__main__":
     wayne(ASCII_FILE)
