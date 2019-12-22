@@ -46,7 +46,7 @@ class IntCode:
     def __init__(self, opcode, input_list=[]):
         self.opcode = opcode.copy()
         self.length = len(opcode)
-        self.opcode.extend([0] * 1000)
+        self.opcode.extend([0] * 10000)
         self.position = 0
         self.relative = 0
         self.input_list = input_list.copy()
