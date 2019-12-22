@@ -86,6 +86,28 @@ class ASCII:
 
         return sum
 
+    def notify(self, routine):
+        """
+        Primes the robot to perform the notification routine. Sets the initial
+        opcode bit, primes the input, and prepares for the run. The run will
+        return the amount of dust collected during the routine, which will
+        be returned by the function.
+        """
+        self.program.opcode[0] = 2
+        output = self.program.run()
+
+        for line in routine:
+            for char in line:
+                self.program.add_input(ord(char))
+            self.program.add_input(10)
+
+        self.program.add_input(ord("n"))
+        self.program.add_input(10)
+
+        output = self.program.run()    
+        result = output.pop()
+        return result
+
 
 def read_opcode(filename):
     """
@@ -104,9 +126,7 @@ def read_opcode(filename):
 
 def wayne(filename):
     """
-    I'd have to say...asphincter says what?
-    ...What?
-    ...ASPHINCTER says what?
+    I'd have to say...asphinctersayswhat?
     ...What?
     Exactly.
     """
@@ -117,7 +137,21 @@ def wayne(filename):
 
     print(f"The alignment sum is: {answer}")
     return answer
-    
+
+
+def garth(filename, routine):
+    """
+    Did you ever find Bugs Bunny attractive when
+    he put on a dress and played a girl bunny?
+    """
+    software = read_opcode(filename)
+    robot = ASCII(software)
+    dust = robot.notify(routine)
+
+    print(f"The amount of dust collected is: {dust}")
+    return dust
+
 
 if __name__ == "__main__":
     wayne(ASCII_FILE)
+    garth(ASCII_FILE, ASCII_ROUTINE)
